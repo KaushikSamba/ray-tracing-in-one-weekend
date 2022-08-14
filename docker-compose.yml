@@ -1,0 +1,9 @@
+version: '3.3'
+services:
+    linux-cpp:
+        volumes:
+            - '.:/code'
+        container_name: cpp-dev
+        image: linux-cpp
+        tty: true
+        stdin_open: true 
