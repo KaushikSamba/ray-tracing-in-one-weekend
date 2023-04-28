@@ -6,7 +6,7 @@ FetchContent_Declare(fmt
 )
 FetchContent_MakeAvailable(fmt)
 
-add_executable(hello-world first_file.cpp)
+add_executable(app main.cpp)
 
-target_link_libraries(hello-world fmt::fmt)
-target_include_directories(hello-world PUBLIC ${CMAKE_SOURCE_DIR}/include)
+target_link_libraries(app fmt::fmt)
+target_include_directories(app PUBLIC ${CMAKE_SOURCE_DIR}/include)
