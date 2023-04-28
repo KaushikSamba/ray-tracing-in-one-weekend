@@ -7,3 +7,4 @@ services:
         image: linux-cpp
         tty: true
         stdin_open: true 
+        user: ${CURRENT_UID}
