@@ -11,6 +11,7 @@ int main()
 
     for(int j = NUM_ROWS-1; j >=0; j--)
     {
+        std::cerr << "\rScanlines remaining: " << j << ' ' << std::flush;
         for(int i = 0; i < NUM_COLS; i++)
         {
             float r = static_cast<float>(i)/NUM_COLS;
@@ -26,5 +27,6 @@ int main()
         std::cout << std::endl;
     }
 
+    std::cerr << "\nDone";
     return 0;
 }
