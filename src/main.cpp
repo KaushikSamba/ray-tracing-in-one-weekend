@@ -6,17 +6,21 @@
 Color ray_color(Ray const& r)
 {
     auto unit_dir = unit_vector(r.direction());
-    auto t        = 0.5 * (unit_dir.y() + 1.0);
 
-    return (1.0 - t) * Color {1.0, 1.0, 1.0}  // White
-           + t* Color {0.5, 0.7, 1.0}         // Blue
+    auto t = (unit_dir.y()                    // -1 < y < 1 after normalization
+              + 1.0                           // 0 < y+1 < 2
+              ) *
+             0.5;                             // 0 < 0.5*(y+1) < 1
+
+    return (1.0 - t) * Color {1.0, 1.0, 1.0}  // White: t is closer to 0
+           + t* Color {0.5, 0.7, 1.0}         // Blue : t is closer to 1
     ;
 }
 
 int main()
 {
     // Image
-    const auto ASPECT_RATIO = 2.0 / 1.0;
+    const auto ASPECT_RATIO = 16.0 / 9.0;  // Aspect ratio = width/height
     const int  NUM_COLS     = 400;
     const int  NUM_ROWS     = static_cast<int>(NUM_COLS / ASPECT_RATIO);
 
@@ -36,18 +40,24 @@ int main()
 
     for(int j = NUM_ROWS - 1; j >= 0; j--)
     {
-        std::cerr << "\rScanlines remaining: " << j << ' ' << std::flush;
+        // std::cerr << "\rScanlines remaining: " << j << ' ' << std::flush;
         for(int i = 0; i < NUM_COLS; i++)
         {
             auto u = static_cast<double>(i) / (NUM_COLS - 1);
             auto v = static_cast<double>(j) / (NUM_ROWS - 1);
-            Ray  r {origin, lower_left_corner + u * horizontal + v * vertical - origin};
+            Ray  r {
+                origin,
+                (lower_left_corner  // This is the left bottom extreme
+                 + u * horizontal   // Adding this makes it symmetric w.r.t. the center along the x-axis
+                 + v * vertical)    // Adding this makes it symmetric w.r.t. the center along the y-axis
+                    - origin        // Subtract the origin to get the direction vector
+            };
 
             auto color = ray_color(r);
             write_color(std::cout, color);
         }
     }
 
-    std::cerr << "\nDone";
+    std::cerr << "\nDone.\n";
     return 0;
 }
